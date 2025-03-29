@@ -50,7 +50,6 @@ public class DocumentServiceTest {
 
   @Test
   void uploadDocument_Success() throws Exception {
-    // Data
     String uploadJson =
         "{\"name\": \"test.pdf\", \"user\": \"ana\", \"tags\": [\"math\", \"tech\"]]}";
     MultipartFile file =
@@ -80,21 +79,18 @@ public class DocumentServiceTest {
 
   @Test
   void uploadDocument_InvalidJson() throws Exception {
-    // Given
     String invalidJson = "invalid json";
     MultipartFile file = new MockMultipartFile("file", new byte[] {});
 
     when(objectMapper.readValue(invalidJson, FileDataDto.class))
         .thenThrow(JsonProcessingException.class);
 
-    // When & Then
     assertThrows(
         BadRequestException.class, () -> documentService.uploadDocument(invalidJson, file));
   }
 
   @Test
   void searchDocuments_Success() {
-    // Given
     FileDataDto fileDataDto = new FileDataDto();
     fileDataDto.setUser("user1");
     fileDataDto.setName("doc");
@@ -106,36 +102,29 @@ public class DocumentServiceTest {
     when(documentRepository.searchDocuments("user1", "doc", List.of("tag1"), pageable))
         .thenReturn(documentEntities);
 
-    // When
     Page<DocumentDto> result = documentService.searchDocuments(fileDataDto, 0, 10);
 
-    // Then
     assertNotNull(result);
     verify(documentRepository, times(1)).searchDocuments("user1", "doc", List.of("tag1"), pageable);
   }
 
   @Test
   void downloadDocument_Success() {
-    // Given
     DocumentEntity document = new DocumentEntity();
-    document.setMinIoPath("http://minio-url/test.pdf");
+    document.setMinIoPath("http://minio-file-url/test.pdf");
 
     when(documentRepository.findById(1L)).thenReturn(Optional.of(document));
 
-    // When
     DownloadDto result = documentService.download(1L);
 
-    // Then
     assertNotNull(result);
-    assertEquals("http://minio-url/test.pdf", result.getUrl());
+    assertEquals("http://minio-file-url/test.pdf", result.getUrl());
   }
 
   @Test
   void downloadDocument_NotFound() {
-    // Given
     when(documentRepository.findById(1L)).thenReturn(Optional.empty());
 
-    // When & Then
     assertThrows(ResourceNotFoundException.class, () -> documentService.download(1L));
   }
 }

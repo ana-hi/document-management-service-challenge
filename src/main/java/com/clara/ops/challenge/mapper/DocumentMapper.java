@@ -21,7 +21,7 @@ public class DocumentMapper {
         uploadDto.getTags().stream().map(name -> new TagEntity(name)).collect(Collectors.toList()));
     document.setFileSize(file.getSize());
     document.setFileType(file.getContentType());
-    document.setMinIoPath(url.substring(0, 200));
+    document.setMinIoPath(url);
     document.setCreatedAt(LocalDateTime.now());
     return document;
   }
