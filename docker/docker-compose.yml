@@ -34,6 +34,8 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     container_name: document_management_service
+    ports: 
+      - "8080:8080"
     environment:
       - JAVA_OPTS=-Xmx50m -Xms50m
     deploy:

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,7 @@ public class DocumentService {
     this.documentMapper = documentMapper;
   }
 
+  @Async
   public void uploadDocument(String uploadJson, MultipartFile file) {
     try {
       FileDataDto uploadDto = objectMapper.readValue(uploadJson, FileDataDto.class);
